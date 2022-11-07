@@ -8,7 +8,10 @@ class Item (models.Model):
     productType= models.CharField(max_length=300, default='')
     description =models.CharField(max_length=300, default='')
     price =models.IntegerField( default='1')
-    productImage = models.ImageField(upload_to= 'myShop/Images', default='')
+    productImage = models.ImageField(upload_to= 'Images', default='')
+
+    def __str__(self):
+        return self.productName
 
 class Seller (models.Model):
     sellerID= models.AutoField
@@ -16,6 +19,9 @@ class Seller (models.Model):
     email= models.CharField(max_length=300, default='')
     username=models.CharField(max_length=300, default='')
     password=models.CharField(max_length=300, default='')
+
+    def __str__(self):
+        return self.name
 
 class Buyer (models.Model):
     buyerID= models.AutoField
@@ -25,6 +31,9 @@ class Buyer (models.Model):
     password=models.CharField(max_length=300, default='')
     payment=models.FloatField(default='1')
 
+    def __str__(self):
+        return self.name
+
 class Delivery(models.Model):
     deliveryID= models.AutoField
     buyerID=models.IntegerField( default='1')
@@ -32,8 +41,17 @@ class Delivery(models.Model):
     date= models.DateField(default='')
     address=models.CharField(max_length=300, default='')
 
+    def __str__(self):
+        return self.deliveryID
+
 class Payment(models.Model):
     paymentID= models.AutoField
     deliveryID=models.IntegerField( default='1')
     cardNumber=models.CharField(max_length=300, default='')
     amount=models.FloatField(default='1')
+
+    def __str__(self):
+        return self.paymentID
+
+
+

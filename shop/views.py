@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .models import Item, Delivery, Payment, Buyer, Seller
 
 def index(request):
-    return HttpResponse("My shop")
+    product=Item.objects.all()
+    print(product)
+    noOfProducts=len(product)
+    params={'product':product, 'range': range (noOfProducts)}
+    return render (request,'index.html',params)
 
 def singleProductPage(request):
     return HttpResponse("singleProductPage")

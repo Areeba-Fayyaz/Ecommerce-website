@@ -1,12 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html'%}
+{% block title%}Shop {% endblock%}
+{% load static %}
+{% block css %} 
+
+{% endblock%}
+{% block body%}
+
+<div class="container-fluid ">
+   
+    <div class="text-center">
+        <h2 class='m-4'  >Welcome to My Shop!</h2>
+      </div>
+<div class="container productCards">
+{% for i in product %}
+
+<!-- /media/Images/{{i.productImage}} -->
+
+<div class="card m-3 " style="width: 18rem;">
     
-</body>
-</html>
+    <img src='/media/{{i.productImage}}'  class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{i.productName}}</h5>
+      <p class="card-text">$ {{i.price}}</p>
+      <a href="#" class="btn btn-dark">Add To Cart</a>
+    </div>
+  </div>
+
+{% endfor %} 
+</div>
+</div>
+{% endblock%}
+
+
+
