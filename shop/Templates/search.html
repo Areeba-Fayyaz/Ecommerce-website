@@ -2,6 +2,17 @@
 {% block title%}Shop {% endblock%}
 {% load static %}
 
+{% block js %} 
+
+    {% if msg|length != 0  %}
+    <script>
+    alert('{{msg}}');
+    windows.location.href='/'
+</script>
+{% endif  %}
+
+{% endblock%}
+
 {% block css %} 
 
 {% endblock%}
@@ -31,6 +42,5 @@
 </div>
 </div>
 {% endblock%}
-
 
 

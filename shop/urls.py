@@ -5,7 +5,7 @@ from .import views
 urlpatterns = [
     path ("", views.index, name = 'MyShop'),
     path ("", views.singleProductPage, name = 'singleProductPage'),
-    path ("", views.search, name = 'search'),
+    path ("search/", views.search, name = 'search'),
     path ("", views.confirmReturn, name = 'confirmReturn'),
     path ("", views.refundRequest, name = 'refundRequest'),
     path ("", views.cart, name = 'cart'),
