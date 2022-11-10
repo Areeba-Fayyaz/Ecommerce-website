@@ -46,7 +46,7 @@ else{
  
 cart= JSON.parse(localStorage.getItem('cart'));
 console.log(localStorage.getItem('cart'))
-document.getElementById('cart').innerHTML = Object.keys(cart).length;
+//document.getElementById('cart').innerHTML = Object.keys(cart).length;
 updateCart(cart);
 
 }
@@ -70,7 +70,8 @@ localStorage.setItem('cart', JSON.stringify(cart));
 
 });
 
-updatePopover(cart);
+//updatePopover(cart);
+//console.log('1')
 function updatePopover(cart)
 {
   
@@ -97,16 +98,19 @@ var popBottom = document.getElementById("popcart");
 
 
 function updateCart(cart) {
-
+  var sum=0;
     for (var item in cart) {
+      sum=sum+cart[item];
       console.log(item);
         document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-dark minus'>-</button> <span id='val" + item + "''>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-dark plus'> + </button>";
        //document.getElementById('div' + item).innerHTML =
       }
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    document.getElementById('cart').innerHTML =sum;
     console.log(cart);
+
+    console.log('2')
     updatePopover(cart);
 }
 $('.divpr').on("click", "button.minus", function() {
