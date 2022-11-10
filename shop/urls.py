@@ -12,7 +12,7 @@ urlpatterns = [
     path ("", views.signinup, name = 'signinup'),
     path ("", views.signin, name = 'signin'),
     path('signup', views.handleSignUp, name="handleSignUp"),
-    path ("", views.checkout, name = 'checkout'),
+    path ("checkout/", views.checkout, name = 'checkout'),
     path ("ordersuccess/", views.orderSuccess, name = 'orderSuccess')
 
 ]

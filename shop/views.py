@@ -87,7 +87,7 @@ def cart(request):
     return HttpResponse("My shop")
 
 def checkout(request):
-    return HttpResponse("My shop")
+    return render (request,'checkout.html')
 
 def orderSuccess(request):
     return render (request,'orderPlaced.html')
