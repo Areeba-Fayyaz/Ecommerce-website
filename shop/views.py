@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Item, Delivery, Payment, Buyer, Seller
+from django.contrib import messages 
+from django.contrib.auth.models import User 
+from .models import Item
+# , Delivery, Payment, Buyer, Seller
 
 
 def index(request):
@@ -9,8 +12,10 @@ def index(request):
     params={'product':product, 'range': range (noOfProducts)}
     return render (request,'index.html',params)
 
-def singleProductPage(request):
-    return HttpResponse("singleProductPage")
+def singleProductPage(request, id):
+    product=Item.objects.filter(id=id)
+    print(product)
+    return  render (request,'productpage.html', {'product':product[0]})
 
 def searchMatch(query,item):
      if query!="":
@@ -42,13 +47,38 @@ def confirmReturn(request):
     return HttpResponse("confirmReturn")
 
 def refundRequest(request):
-    return HttpResponse("My shop")
+     return render (request,'refundRequest.html')
 
 def signinup(request):
     return HttpResponse("signinup")
 
 def signin(request):
     return HttpResponse("My shop")
+
+def handleSignUp(request):
+    if request.method=="POST":
+        # Get the post parameters
+        username=request.POST['username']
+        email=request.POST['email']
+        fname=request.POST['fname']
+        lname=request.POST['lname']
+        pass1=request.POST['pass1']
+        pass2=request.POST['pass2']
+
+        # check for errorneous input
+        
+        # Create the user
+        myuser = User.objects.create_user(username, email, pass1)
+        myuser.name= fname+lname
+        myuser.email= email
+        myuser.username= username
+        myuser.password= pass1
+        myuser.save()
+        messages.success(request, " Your account has been successfully created")
+        return redirect('home')
+
+    else:
+        return HttpResponse("404 - Not found")
 
 def signup(request):
     return HttpResponse("My shop")
@@ -60,4 +90,4 @@ def checkout(request):
     return HttpResponse("My shop")
 
 def orderSuccess(request):
-    return HttpResponse("My shop")
+    return render (request,'orderPlaced.html')
