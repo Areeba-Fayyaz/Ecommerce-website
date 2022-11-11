@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib import messages 
 from django.contrib.auth.models import User 
-from .models import Item
+from .models import Item,Buyer
 # , Delivery, Payment, Buyer, Seller
 
 
@@ -86,8 +86,26 @@ def signup(request):
 def cart(request):
     return HttpResponse("My shop")
 
+
 def checkout(request):
-    return render (request,'checkout.html')
+    product=Item.objects.all()
+    print( request.method)
+    if request.method=="POST":
+        itemsJson=request.POST.get('itemsJson', '')
+        name = request.POST.get('firstName', '')+' '+ request.POST.get('lastName', '')
+        print(name,'======================')
+        username = request.POST.get('checkoutusername', '')
+        email = request.POST.get('checkoutemail', '')
+        address = request.POST.get('address', '') + " " + request.POST.get('address2', '')+ " " + request.POST.get('country', '')+ " " + request.POST.get('city', '')+ " " + request.POST.get('zip', '')
+        phone = request.POST.get('phone', '')
+
+        buyer = Buyer(itemsJson=itemsJson, name=name, username=username, email=email, address=address, phone=phone, payment='2', password='2')
+        buyer.save()
+        thank=True
+        id=buyer.buyerID
+        return render(request, 'checkout.html', {'thank':thank, 'id':id})
+    
+    return render (request,'checkout.html',{'product':product})
 
 def orderSuccess(request):
     return render (request,'orderPlaced.html')

@@ -24,19 +24,23 @@ class Seller (models.Model):
     def __str__(self):
         return self.name
 
-# class Buyer (models.Model):
-#     buyerID= models.AutoField
-#     name =models.CharField(max_length=300, default='')
-#     email= models.CharField(max_length=300, default='')
-#     username=models.CharField(max_length=300, default='')
-#     password=models.CharField(max_length=300, default='')
-#     payment=models.FloatField(default='1')
+class Buyer (models.Model):
+    
+    buyerID= models.AutoField(primary_key=True)
+    itemsJson=models.CharField(max_length=300, default='')
+    name =models.CharField(max_length=300, default='')
+    email= models.CharField(max_length=300, default='')
+    username=models.CharField(max_length=300, default='')
+    password=models.CharField(max_length=300, default='')
+    address= models.CharField(max_length=1000, default='')
+    phone = models.CharField(max_length=1000, default='')
+    payment=models.FloatField(default='1')
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 # class Delivery(models.Model):
-#     deliveryID= models.AutoField
+#     deliveryID= models.AutoField(primary_key="True")
 #     buyerID=models.IntegerField( default='1')
 #     name =models.CharField(max_length=300, default='')
 #     date= models.DateField(default='')
@@ -46,7 +50,7 @@ class Seller (models.Model):
 #         return self.deliveryID
 
 # class Payment(models.Model):
-#     paymentID= models.AutoField
+#     paymentID= models.AutoField(primary_key="True")
 #     deliveryID=models.IntegerField( default='1')
 #     cardNumber=models.CharField(max_length=300, default='')
 #     amount=models.FloatField(default='1')
