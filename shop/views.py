@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib import messages 
 from django.contrib.auth.models import User 
+from django.contrib.auth  import authenticate,  login, logout
 from .models import Item,Buyer
 # , Delivery, Payment, Buyer, Seller
 
@@ -55,6 +56,35 @@ def signinup(request):
 def signin(request):
     return HttpResponse("My shop")
 
+def handleLogin(request):
+    if request.method=="POST":
+        # Get the post parameters
+        loginusername=request.POST['loginusername']
+        loginpassword=request.POST['loginpassword']
+
+        user=authenticate(request, username= loginusername, password= loginpassword)
+        print(user)
+        print(user is not None)
+        if user is not None:
+            login(request, user)
+            print(loginusername)
+            print(loginpassword)
+            messages.success(request, "Successfully Logged In")
+            return redirect("MyShop")
+        else:
+            print(loginusername,'===================')
+            print(loginpassword)
+            messages.warning(request, "Invalid credentials! Please try again")
+            return redirect("MyShop")
+
+    return HttpResponse("404- Not found")
+
+def handleLogout(request):
+    logout(request)
+    messages.success(request, "Successfully logged out")
+    return redirect('MyShop')
+
+
 def handleSignUp(request):
     if request.method=="POST":
         # Get the post parameters
@@ -66,16 +96,28 @@ def handleSignUp(request):
         pass2=request.POST['pass2']
 
         # check for errorneous input
+        # if len(username)<10:
+        #     messages.warning(request, " Your user name must be greator than 10 characters")
+            # '{{% block body %}} <div class="alert alert-danger" role="alert">A simple danger alert—check it out!</div>{{% endblock %}}'
+            # return redirect('MyShop')
+
+        if not username.isalnum():
+            messages.warning(request, " User name should only contain letters and numbers")
+            return redirect('MyShop')
+        if (pass1!= pass2):
+             messages.warning(request, " Passwords do not match")
+             return redirect('MyShop')
         
         # Create the user
         myuser = User.objects.create_user(username, email, pass1)
-        myuser.name= fname+lname
+        myuser.first_name= fname
+        myuser.last_name=lname
         myuser.email= email
         myuser.username= username
-        myuser.password= pass1
+        myuser.set_password(pass1)
         myuser.save()
         messages.success(request, " Your account has been successfully created")
-        return redirect('home')
+        return redirect('/')
 
     else:
         return HttpResponse("404 - Not found")
