@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.contrib import messages 
 from django.contrib.auth.models import User 
 from django.contrib.auth  import authenticate,  login, logout
-from .models import Item,Buyer
+from .models import Item,Buyer,Delivery, Payment,Seller
+import json
+from datetime import date
 # , Delivery, Payment, Buyer, Seller
 
 
@@ -44,23 +46,28 @@ def search(request):
     return render (request,'search.html',params)
 
 
-def confirmReturn(request):
-    return HttpResponse("confirmReturn")
+
 
 def refundRequest(request):
      return render (request,'refundRequest.html')
 
-def signinup(request):
-    return HttpResponse("signinup")
-
-def signin(request):
-    return HttpResponse("My shop")
-
 def handleLogin(request):
+    admin=Seller.objects.all()
+    # print(admin.username)
+    # print(admin.password)
+   
     if request.method=="POST":
         # Get the post parameters
         loginusername=request.POST['loginusername']
         loginpassword=request.POST['loginpassword']
+
+
+        #checking if user is admin
+        for item in admin:
+            print(item.username,"==")
+            print(item.password,"==")
+            if item.username == loginusername and item.password== loginpassword:
+                return redirect("/admin")             
 
         user=authenticate(request, username= loginusername, password= loginpassword)
         print(user)
@@ -72,7 +79,6 @@ def handleLogin(request):
             messages.success(request, "Successfully Logged In")
             return redirect("MyShop")
         else:
-            print(loginusername,'===================')
             print(loginpassword)
             messages.warning(request, "Invalid credentials! Please try again")
             return redirect("MyShop")
@@ -91,6 +97,8 @@ def handleSignUp(request):
         username=request.POST['username']
         email=request.POST['email']
         fname=request.POST['fname']
+        phone=request.POST['phonesignup']
+        address=request.POST['addresssignup']
         lname=request.POST['lname']
         pass1=request.POST['pass1']
         pass2=request.POST['pass2']
@@ -107,7 +115,8 @@ def handleSignUp(request):
         if (pass1!= pass2):
              messages.warning(request, " Passwords do not match")
              return redirect('MyShop')
-        
+        buyer = Buyer(itemsJson='', name=fname+lname, username=username, email=email, address=address, phone=phone, payment='0', password=pass1)
+        buyer.save()
         # Create the user
         myuser = User.objects.create_user(username, email, pass1)
         myuser.first_name= fname
@@ -115,36 +124,54 @@ def handleSignUp(request):
         myuser.email= email
         myuser.username= username
         myuser.set_password(pass1)
+       
         myuser.save()
+        
         messages.success(request, " Your account has been successfully created")
         return redirect('/')
 
     else:
         return HttpResponse("404 - Not found")
 
-def signup(request):
-    return HttpResponse("My shop")
-
-def cart(request):
-    return HttpResponse("My shop")
-
 
 def checkout(request):
     product=Item.objects.all()
+    buyers=Buyer.objects.all()
     print( request.method)
     if request.method=="POST":
         itemsJson=request.POST.get('itemsJson', '')
         name = request.POST.get('firstName', '')+' '+ request.POST.get('lastName', '')
-        print(name,'======================')
         username = request.POST.get('checkoutusername', '')
         email = request.POST.get('checkoutemail', '')
         address = request.POST.get('address', '') + " " + request.POST.get('address2', '')+ " " + request.POST.get('country', '')+ " " + request.POST.get('city', '')+ " " + request.POST.get('zip', '')
         phone = request.POST.get('phone', '')
+        cardnumber = request.POST.get('cc-number', '')
+        
+        data  = json.loads(itemsJson)
+        
+        price=0
+        for item in data:
+            price+=data[item][2]
 
-        buyer = Buyer(itemsJson=itemsJson, name=name, username=username, email=email, address=address, phone=phone, payment='2', password='2')
+        for buyer in buyers:
+            print(buyer.username,"==")
+            print(buyer.password,"==")
+            if buyer.username == username and buyer.email== email and buyer.phone== phone:
+                buyer.payment+=price
+            else:   
+                buyer = Buyer(itemsJson=itemsJson, name=name, username=username, email=email, address=address, phone=phone, payment=price, password='2')
+        id=buyer.buyerID
+        today = date.today()
+        delivery=Delivery(buyerID=id,name=name,date=today,address=address)
+        delivery.save()
+        
+        did=delivery.deliveryID
+        payment=Payment(deliveryID=did, cardNumber=cardnumber, amount=price  )
+        payment.save()
+
+
         buyer.save()
         thank=True
-        id=buyer.buyerID
         return render(request, 'checkout.html', {'thank':thank, 'id':id})
     
     return render (request,'checkout.html',{'product':product})

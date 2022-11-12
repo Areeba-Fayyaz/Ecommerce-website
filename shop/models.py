@@ -39,24 +39,24 @@ class Buyer (models.Model):
     def __str__(self):
         return self.name
 
-# class Delivery(models.Model):
-#     deliveryID= models.AutoField(primary_key="True")
-#     buyerID=models.IntegerField( default='1')
-#     name =models.CharField(max_length=300, default='')
-#     date= models.DateField(default='')
-#     address=models.CharField(max_length=300, default='')
+class Delivery(models.Model):
+    deliveryID= models.AutoField(primary_key=True)
+    buyerID=models.IntegerField( default='1')
+    name =models.CharField(max_length=300, default='')
+    date= models.DateField(default='')
+    address=models.CharField(max_length=300, default='')
 
-#     def __str__(self):
-#         return self.deliveryID
+    def __str__(self):
+        return self.name
 
-# class Payment(models.Model):
-#     paymentID= models.AutoField(primary_key="True")
-#     deliveryID=models.IntegerField( default='1')
-#     cardNumber=models.CharField(max_length=300, default='')
-#     amount=models.FloatField(default='1')
+class Payment(models.Model):
+    paymentID= models.AutoField(primary_key=True)
+    deliveryID=models.IntegerField( default='1')
+    cardNumber=models.CharField(max_length=300, default='')
+    amount=models.FloatField(default='1')
 
-#     def __str__(self):
-#         return self.paymentID
+    def __str__(self):
+        return str(self.paymentID)
 
 
 
